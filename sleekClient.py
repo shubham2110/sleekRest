@@ -1,11 +1,12 @@
 #CONFIGURE HERE
 
-boturl="http://127.0.0.1:5001/sendMessage"
+boturl="http://10.52.150.150:5001/sendMessage"
 clientID='alexuidian1@jabb.im'
 serverhost="jabb.im"
 clientPass='21101991'
-
-
+clientID='basis@10.52.150.150'
+clientPass='Cois@1234'
+serverhost='indianoil'
 
 
 from sleekxmpp import ClientXMPP
@@ -20,6 +21,7 @@ import json
 import asyncio
 app = Flask(__name__)
 import time
+from browser3 import browser
 
 #loop=asyncio.get_event_loop()
 
@@ -29,10 +31,10 @@ import time
 def sendMessage2():
 #	print(request.form)
 #	print(request.args)
-	global boturl 
-	global clientID
-	global serverhost
-	global clientPass
+#	global boturl 
+#	global clientID
+#	global serverhost
+#	global clientPass
 	message=request.get_json()
 	user=message['uid']
 	body=message['message']
@@ -71,6 +73,7 @@ def sendMessage():
 		timestamp=message['timestamp']
 	#a=threading.Thread(target=send_finally, args=(clientID, clientPass, user+'@'+serverhost, body) )
 	#a.start()
+	print("Request came for user:", user)
 	asyncio.run(send_finally(clientID, clientPass, user+'@'+serverhost, body ))
 	#a.deamon(True)
 	#asyncio.run()
@@ -97,11 +100,30 @@ class EchoBot(ClientXMPP):
 		self.get_roster()
 
 	def message(self, msg):
-		if msg['type'] in ('chat', 'normal'):
-			msg.reply("Thanks for sending\n%(body)s" % msg).send()
+		user=msg.getFrom().split('/')[0]
+		message1=str(msg['body'])
+		body={}
+		body['uid']=user.split('@')[0]
+		body['message']=message1
+		body['timestamp']=str(time.time())
+		a=browser()
+		payload=a.dicttoJson(body)
+		print(payload)
+		headers={"Content-Type":"application/json"}
+		#a.post_request(self.boturl, header=headers, data=message)
+		res=a.post_request(url=url, headers=headers, data=payload)
+		print(res)	
+		#if msg['type'] in ('chat', 'normal'):
+		#	msg.reply("Thanks for sending\n%(body)s" % msg).send()
 	
+	def connect_process(self):
+		self.connect()
+		self.process()
+	
+	#def send_message(self, url, uid, message):
+		
 
-
+	
 class sendMessageClass(ClientXMPP):
 	def __init__(self, jid, password, mto, mbody):
 		ClientXMPP.__init__(self, jid, password)
@@ -118,8 +140,16 @@ class sendMessageClass(ClientXMPP):
 		self.connect()
 		self.process()
 
+#boturl="http://127.0.0.1:5001/sendMessage"
+#clientID='alexuidian1@jabb.im'
+#serverhost="jabb.im"
+#clientPass='21101991'
+	
 
-
-if __name__ == "__main__":
-        
-    app.run(host='0.0.0.0', port='5001', debug=True )
+if __name__ == "__main__": 
+	echobot=EchoBot(clientID, clientPass)
+	echobot.boturl=boturl
+	echobot.serverhost=serverhost
+	t1=threading.Thread(target=echobot.connect_process)
+	t1.start()
+	app.run(host='0.0.0.0', port='5001', debug=True )
