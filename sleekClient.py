@@ -4,9 +4,11 @@ boturl="http://10.52.150.150:5001/sendMessage"
 clientID='alexuidian1@jabb.im'
 serverhost="jabb.im"
 clientPass='21101991'
+
 clientID='basis@10.52.150.150'
-clientPass='Cois@1234'
+clientPass=''
 serverhost='indianoil'
+logfile='log.txt'
 
 
 from sleekxmpp import ClientXMPP
@@ -48,7 +50,7 @@ def sendMessage2():
 	#asyncio.run()
 	#sending=sendMessageClass(clientID, clientPass, user+'@'+serverhost, body)
 	#asyncio.run(sending.processme())
-	return "Hello, World!"
+	return "Done."
 
 def send_finally2(clientID, clientPass, user, body):
 	sending=sendMessageClass(clientID, clientPass, user, body)
@@ -73,7 +75,7 @@ def sendMessage():
 		timestamp=message['timestamp']
 	#a=threading.Thread(target=send_finally, args=(clientID, clientPass, user+'@'+serverhost, body) )
 	#a.start()
-	print("Request came for user:", user)
+	#print("Request came for user:", user)
 	asyncio.run(send_finally(clientID, clientPass, user+'@'+serverhost, body ))
 	#a.deamon(True)
 	#asyncio.run()
@@ -100,21 +102,31 @@ class EchoBot(ClientXMPP):
 		self.get_roster()
 
 	def message(self, msg):
-		user=msg.getFrom().split('/')[0]
-		message1=str(msg['body'])
+		
 		body={}
+		try:
+			user=str(msg.getFrom()).split('/')[0]
+		except Exception as e:
+			f=open(logfile, w)
+			f.write(e)
+			f.close()
+		#self.send_message(mto="00507468@indianoil",mbody=user)
+
+		#if msg['type'] in ('chat', 'normal'):
+		#	msg.reply("Thanks for sending\n%(body)s" % msg).send()
+		
 		body['uid']=user.split('@')[0]
+		
+		message1=str(msg['body'])
 		body['message']=message1
 		body['timestamp']=str(time.time())
 		a=browser()
 		payload=a.dicttoJson(body)
-		print(payload)
+		#print(payload)
 		headers={"Content-Type":"application/json"}
 		#a.post_request(self.boturl, header=headers, data=message)
-		res=a.post_request(url=url, headers=headers, data=payload)
-		print(res)	
-		#if msg['type'] in ('chat', 'normal'):
-		#	msg.reply("Thanks for sending\n%(body)s" % msg).send()
+		res=a.post_request(url=boturl, headers=headers, data=payload)
+		#print(res)	
 	
 	def connect_process(self):
 		self.connect()
