@@ -1,12 +1,12 @@
 #CONFIGURE HERE
 
-boturl="http://10.52.150.150:5001/sendMessage"
+boturl="http://127.0.0.1:5002/sendMessage"
 clientID='alexuidian1@jabb.im'
 serverhost="jabb.im"
 clientPass='21101991'
 
 clientID='basis@10.52.150.150'
-clientPass=''
+clientPass='Cois@12345'
 serverhost='indianoil'
 logfile='log.txt'
 
