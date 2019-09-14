@@ -10,6 +10,12 @@ clientPass='Cois@12345'
 serverhost='indianoil'
 logfile='log.txt'
 
+clientID='basis@jabb.im'
+clientPass='21101991'
+serverhost='jabb.im'
+logfile='log.txt'
+
+
 
 from sleekxmpp import ClientXMPP
 from sleekxmpp.exceptions import IqError, IqTimeout
@@ -91,18 +97,27 @@ async def send_finally(clientID, clientPass, user, body):
 
 class EchoBot(ClientXMPP):
 	
+	
 	def __init__(self, jid, password):
 		self.conn=ClientXMPP.__init__(self, jid, password, handlefunction=self.message )
 		self.add_event_handler("session_start", self.session_start)
 		self.add_event_handler("message", self.message)
+		self.mids=[]
 		print("Setup Done")
 
 	def session_start(self, event):
 		self.send_presence()
 		self.get_roster()
+	
+	
 
-	def message(self, msg):
-		
+	def message(self, msg):		
+		if msg['id'] in self.mids :
+			return
+		print(msg['id'], self.mids)
+		if(len(self.mids) > 10):
+			self.mids.clear()
+		self.mids.append(msg['id'])
 		body={}
 		try:
 			user=str(msg.getFrom()).split('/')[0]
@@ -116,7 +131,7 @@ class EchoBot(ClientXMPP):
 		#	msg.reply("Thanks for sending\n%(body)s" % msg).send()
 		
 		body['uid']=user.split('@')[0]
-		
+		#print(msg,msg['id'])	
 		message1=str(msg['body'])
 		body['message']=message1
 		body['timestamp']=str(time.time())
@@ -125,13 +140,18 @@ class EchoBot(ClientXMPP):
 		#print(payload)
 		headers={"Content-Type":"application/json"}
 		#a.post_request(self.boturl, header=headers, data=message)
+		#print("Came here ECHO BOT")
 		res=a.post_request(url=boturl, headers=headers, data=payload)
 		#print(res)	
 	
 	def connect_process(self):
 		self.connect()
-		self.process()
-	
+		self.process(block=True)
+
+	def connect_processt(self):
+		t1=threading.Thread(target=self.connect_process)
+		t1.daemon = True
+		t1.start()
 	#def send_message(self, url, uid, message):
 		
 
@@ -159,9 +179,10 @@ class sendMessageClass(ClientXMPP):
 	
 
 if __name__ == "__main__": 
+	app.run(host='0.0.0.0', port='5001', debug=True ))
 	echobot=EchoBot(clientID, clientPass)
 	echobot.boturl=boturl
 	echobot.serverhost=serverhost
-	t1=threading.Thread(target=echobot.connect_process)
-	t1.start()
-	app.run(host='0.0.0.0', port='5001', debug=True )
+	echobot.connect_process()
+	#t1=threading.Thread(target=echobot.connect_process)
+	#t1.start()
