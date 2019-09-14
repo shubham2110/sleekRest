@@ -1,6 +1,6 @@
 #CONFIGURE HERE
 
-boturl="http://127.0.0.1:5002/sendMessage"
+boturl="http://10.52.150.150:5002/sendMessage"
 clientID='alexuidian1@jabb.im'
 serverhost="jabb.im"
 clientPass='21101991'
@@ -10,10 +10,10 @@ clientPass='Cois@12345'
 serverhost='indianoil'
 logfile='log.txt'
 
-clientID='basis@jabb.im'
-clientPass='21101991'
-serverhost='jabb.im'
-logfile='log.txt'
+#clientID='basis@jabb.im'
+#clientPass='21101991'
+#serverhost='jabb.im'
+#logfile='log.txt'
 
 
 
@@ -95,9 +95,7 @@ async def send_finally(clientID, clientPass, user, body):
 	
 
 
-class EchoBot(ClientXMPP):
-	
-	
+class EchoBot(ClientXMPP):	
 	def __init__(self, jid, password):
 		self.conn=ClientXMPP.__init__(self, jid, password, handlefunction=self.message )
 		self.add_event_handler("session_start", self.session_start)
@@ -114,7 +112,7 @@ class EchoBot(ClientXMPP):
 	def message(self, msg):		
 		if msg['id'] in self.mids :
 			return
-		print(msg['id'], self.mids)
+		#print(msg['id'], self.mids)
 		if(len(self.mids) > 10):
 			self.mids.clear()
 		self.mids.append(msg['id'])
@@ -146,7 +144,7 @@ class EchoBot(ClientXMPP):
 	
 	def connect_process(self):
 		self.connect()
-		self.process(block=True)
+		self.process()
 
 	def connect_processt(self):
 		t1=threading.Thread(target=self.connect_process)
@@ -179,10 +177,10 @@ class sendMessageClass(ClientXMPP):
 	
 
 if __name__ == "__main__": 
-	app.run(host='0.0.0.0', port='5001', debug=True ))
 	echobot=EchoBot(clientID, clientPass)
 	echobot.boturl=boturl
 	echobot.serverhost=serverhost
 	echobot.connect_process()
+	app.run(host='0.0.0.0', port='5001', debug=True, use_reloader=False )
 	#t1=threading.Thread(target=echobot.connect_process)
 	#t1.start()

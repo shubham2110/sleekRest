@@ -21,7 +21,7 @@ class browser:
 			response=opener.open(request)
 		except urllib.error.URLError as e:
 			if hasattr(e, 'reason'):
-				print('We failed to reach a server.')
+				print(request.full_url, 'We failed to reach a server.')
 				print(('Reason: ', e.reason))
 				response=(0,e.reason)
 				return response
