@@ -120,7 +120,7 @@ class EchoBot(ClientXMPP):
 		try:
 			user=str(msg.getFrom()).split('/')[0]
 		except Exception as e:
-			f=open(logfile, w)
+			f=open(logfile, 'a')
 			f.write(e)
 			f.close()
 		#self.send_message(mto="00507468@indianoil",mbody=user)
@@ -145,10 +145,12 @@ class EchoBot(ClientXMPP):
 	def connect_process(self):
 		self.connect()
 		self.process()
+		print("Server Started")
 
 	def connect_processt(self):
 		t1=threading.Thread(target=self.connect_process)
 		t1.daemon = True
+		#print()
 		t1.start()
 	#def send_message(self, url, uid, message):
 		
@@ -160,6 +162,9 @@ class sendMessageClass(ClientXMPP):
 		self.mto=mto
 		self.mbody=mbody
 		self.add_event_handler("session_start", self.start)
+		#f=open('log.txt', 'a')
+		#f.write(mbody)
+		#f.close()
 
 	def start(self, event):
 		self.send_presence()
@@ -169,6 +174,10 @@ class sendMessageClass(ClientXMPP):
 	async def processme(self):
 		self.connect()
 		self.process()
+		#f=open('log.txt', 'a')
+		#f.write("Message send")
+		#f.close()
+		
 
 #boturl="http://127.0.0.1:5001/sendMessage"
 #clientID='alexuidian1@jabb.im'
