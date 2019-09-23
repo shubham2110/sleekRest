@@ -100,9 +100,12 @@ class EchoBot(ClientXMPP):
 		self.conn=ClientXMPP.__init__(self, jid, password, handlefunction=self.message )
 		self.add_event_handler("session_start", self.session_start)
 		self.add_event_handler("message", self.message)
+		self.add_event_handler("ssl_invalid_cert", self.discard)
 		self.mids=[]
 		print("Setup Done")
 
+	def discard(self, event, cert, direct):
+		return
 	def session_start(self, event):
 		self.send_presence()
 		self.get_roster()
@@ -162,10 +165,13 @@ class sendMessageClass(ClientXMPP):
 		self.mto=mto
 		self.mbody=mbody
 		self.add_event_handler("session_start", self.start)
+		self.add_event_handler("ssl_invalid_cert", self.discard)
 		#f=open('log.txt', 'a')
 		#f.write(mbody)
 		#f.close()
-
+	
+	def discard(self, event, cert, direct):
+		return
 	def start(self, event):
 		self.send_presence()
 		self.get_roster()
