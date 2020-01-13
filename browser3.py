@@ -88,7 +88,7 @@ class browser:
 
 	def ws_on_close(self, ws):
 		self.ws_open=False
-		print("### closed ###")
+		print("### One Websocket closed ###")
 
 	def ws_on_open(self, ws):
 		self.ws_open=True
@@ -102,7 +102,10 @@ class browser:
 		opent.daemon= True
 		opent.start()
 		#ws.send("Hello")
-		print("### Websockets Opened ###")
+		if self.ws_open == True:
+			print("### One Websocket Opened ###")
+		else:
+			print("### Could not Open Websocket for a user ###")
 		return(0)
 
 	def ws_start(self, url, on_open=None, on_message=None, on_error=None, on_close = None, trace=True):
@@ -126,3 +129,4 @@ class browser:
 		wst = threading.Thread(target=self.ws.run_forever, kwargs= { 'sslopt' : {"check_hostname": False, "cert_reqs": ssl.CERT_NONE} , })
 		wst.daemon = True
 		wst.start()
+		time.sleep(1)

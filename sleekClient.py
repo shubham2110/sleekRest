@@ -142,7 +142,7 @@ class EchoBot(ClientXMPP):
 		body['timestamp']=str(time.time())
 		a=browser()
 		payload=a.dicttoJson(body)
-		print(payload)
+		#print(payload)
 		headers={"Content-Type":"application/json"}
 		#a.post_request(self.boturl, header=headers, data=message)
 		#print("Came here ECHO BOT")
