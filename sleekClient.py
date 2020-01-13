@@ -5,9 +5,9 @@ clientID='alexuidian1@jabb.im'
 serverhost="jabb.im"
 clientPass='21101991'
 
-clientID='basis@10.52.150.150'
-clientPass='Cois@12345'
-serverhost='indianoil'
+clientID='xera@chat.indianoil.in'
+clientPass='xera123'
+serverhost='chat.indianoil.in'
 logfile='log.txt'
 
 #clientID='basis@jabb.im'
@@ -90,8 +90,11 @@ def sendMessage():
 	return "Hello, World!"
 
 async def send_finally(clientID, clientPass, user, body):
-	sending=sendMessageClass(clientID, clientPass, user, body)
-	await sending.processme()
+	echobot=app.echobot
+	await echobot.asend_message(user,body)
+	#sending=sendMessageClass(clientID, clientPass, user, body)
+	#print(clientID, clientPass, user, body)
+	#await sending.processme()
 	
 
 
@@ -107,8 +110,9 @@ class EchoBot(ClientXMPP):
 	def discard(self, event, cert, direct):
 		return
 	def session_start(self, event):
-		self.send_presence()
-		self.get_roster()
+		print(self.send_presence())
+		print(self.get_roster())
+
 	
 	
 
@@ -138,7 +142,7 @@ class EchoBot(ClientXMPP):
 		body['timestamp']=str(time.time())
 		a=browser()
 		payload=a.dicttoJson(body)
-		#print(payload)
+		print(payload)
 		headers={"Content-Type":"application/json"}
 		#a.post_request(self.boturl, header=headers, data=message)
 		#print("Came here ECHO BOT")
@@ -155,6 +159,10 @@ class EchoBot(ClientXMPP):
 		t1.daemon = True
 		#print()
 		t1.start()
+	async def asend_message(self, user, body):
+		self.send_message(mto=user, mbody=body, mtype='chat')
+		#seld.connect()
+		#self.process()
 	#def send_message(self, url, uid, message):
 		
 
@@ -196,6 +204,9 @@ if __name__ == "__main__":
 	echobot.boturl=boturl
 	echobot.serverhost=serverhost
 	echobot.connect_process()
+	app.echobot=echobot
 	app.run(host='0.0.0.0', port='5001', debug=True, use_reloader=False )
-	#t1=threading.Thread(target=echobot.connect_process)
-	#t1.start()
+	t1=threading.Thread(target=echobot.connect_process)
+	t1.start()
+
+
