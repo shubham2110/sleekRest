@@ -1,19 +1,13 @@
 #CONFIGURE HERE
 
 boturl="http://10.52.150.150:5002/sendMessage"
-clientID='alexuidian1@jabb.im'
-serverhost="jabb.im"
-clientPass='21101991'
+
 
 clientID='xera@chat.indianoil.in'
 clientPass='xera123'
 serverhost='chat.indianoil.in'
 logfile='log.txt'
 
-#clientID='basis@jabb.im'
-#clientPass='21101991'
-#serverhost='jabb.im'
-#logfile='log.txt'
 
 
 
