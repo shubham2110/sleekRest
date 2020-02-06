@@ -92,7 +92,7 @@ class EchoBot(ClientXMPP):
 		#a.post_request(self.boturl, header=headers, data=message)
 		#print("Came here ECHO BOT")
 		res=a.post_request(url=boturl, headers=headers, data=payload)
-		#print(res)	
+		msg.reply(res).send()
 	
 	def connect_process(self):
 		self.connect()
