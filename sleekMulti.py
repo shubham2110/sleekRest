@@ -33,7 +33,7 @@ def sendMessage():
 	if 'timestamp' in message.keys():
 		timestamp=message['timestamp']
 	asyncio.run(send_finally(clientID, clientPass, user+'@'+serverhost, body ))
-	return "Hello, World!"
+	return "Message Sent."
 
 async def send_finally(clientID, clientPass, user, body):
 	echobot=app.echobot[clientID]
@@ -91,6 +91,7 @@ class EchoBot(ClientXMPP):
 		headers={"Content-Type":"application/json"}
 		#a.post_request(self.boturl, header=headers, data=message)
 		#print("Came here ECHO BOT")
+		self.send_presence()
 		res=a.post_request(url=boturl, headers=headers, data=payload)
 		msg.reply(res).send()
 	
@@ -106,6 +107,7 @@ class EchoBot(ClientXMPP):
 		t1.start()
 	async def asend_message(self, user, body):
 		print(user, body)
+		self.send_presence()
 		self.send_message(mto=user, mbody=body, mtype='chat')
 		#seld.connect()
 		#self.process()
