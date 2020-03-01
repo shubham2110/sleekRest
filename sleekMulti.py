@@ -92,7 +92,7 @@ class EchoBot(ClientXMPP):
 		#a.post_request(self.boturl, header=headers, data=message)
 		#print("Came here ECHO BOT")
 		self.send_presence()
-		res=a.post_request(url=boturl, headers=headers, data=payload)
+		res=a.post_request(url=self.boturl, headers=headers, data=payload)
 		msg.reply(res).send()
 	
 	def connect_process(self):
@@ -145,6 +145,7 @@ if __name__ == "__main__":
 	app.run(host='0.0.0.0', port=port, debug=True, use_reloader=False )
 	for each in app.echobot.keys():
 		echobot=app.echobot[each]
+		print(each)
 		t1=threading.Thread(target=echobot.connect_process)
 		t1.start()
 
